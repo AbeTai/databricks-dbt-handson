@@ -315,20 +315,18 @@ Environment 作成後、設定内容を確認します。
 3. Create job または New job を選択します。
 4. Job name に `Daily databricks dbt handson` を入力します。
 5. Environment は前の手順で作成した `Production` または `Handson production` を選択します。
-6. Branch は `main` を選択します。
-7. Commands に次を設定します。
+6. Commands に次を設定します。
 
 ```bash
-dbt deps
 dbt run
 dbt test
 ```
 
-8. Schedule を有効にします。
-9. 実行頻度を Daily に設定します。
-10. 実行時刻を参加者またはチームが確認しやすい時刻に設定します。
-11. Time zone は利用者のタイムゾーンに合わせます。
-12. Save します。
+7. Schedule を有効にします。
+8. 実行頻度を specific hoursに設定します。
+9. 実行時刻を参加者またはチームが確認しやすい時刻に設定します。
+10. Time zone は利用者のタイムゾーンに合わせます。
+11. Save します。
 
 ハンズオンでは、例として `Asia/Tokyo` の毎日 09:00 実行にすると確認しやすいです。
 
@@ -344,6 +342,8 @@ Job 実行後は、Run history で次を確認します。
 | Artifacts | `run_results.json` や `manifest.json` が生成されていること |
 
 Daily Job では、手動実行と同じく `workspace.bronze`、`workspace.silver`、`workspace.gold` にモデルが作成・更新されます。
+
+また、databricks側でも各テーブルの履歴タブを確認し、テーブルが更新されたことを確認します。
 
 ## 17. ローカル dbt CLI で実行する場合
 
@@ -371,7 +371,14 @@ dbt run --profiles-dir .
 dbt test --profiles-dir .
 ```
 
-## 18. よくあるエラーと確認ポイント
+## 18. ダッシュボード作成
+1. databricksを開き、左側タブのダッシュボードを開きます。
+2. 右上の「ダッシュボードを作成」を選択します
+3. 左側データタブからgoldスキーマのテーブルを追加します
+4. 「無題のページ」(デフォルト名)を選択し、下の「ビジュアライゼーションを追加」からダッシュボードの枠を追加します
+5. 右側でグラフ種類や軸のカラムを選択し、ダッシュボードの設定を行います。Genie code(databricksのAIエージェント)に作成させることもできます。枠追加後サジェストされる内容のボタンを押すか、右上のランプマークからGenie codeを開いて任意のプロンプトを書くことで作成できます。
+
+## 19. よくあるエラーと確認ポイント
 
 | エラー内容 | 確認ポイント |
 |---|---|
@@ -387,7 +394,7 @@ dbt test --profiles-dir .
 | Daily Job だけ失敗する | Job の Environment、Databricks credential、SQL Warehouse、実行権限が IDE と同じか確認する |
 | モデルが `dev_bronze` に作成される | `macros/generate_schema_name.sql` が存在するか確認する |
 
-## 19. ハンズオン完了条件
+## 20. ハンズオン完了条件
 
 次の状態になれば完了です。
 
