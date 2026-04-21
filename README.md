@@ -1,6 +1,6 @@
 # databricks-dbt-handson
 
-Databricks の `samples.tpch` を使い、Bronze / Silver / Gold の3層で TPC-H 注文データを変換する dbt ハンズオン用リポジトリです。参加者が GitHub からクローンして、dbt Cloud または dbt CLI から実行できる構成にしています。この環境では Unity Catalog の managed table 作成が制限されることがあるため、全レイヤーを View として作成します。
+Databricks の `samples.tpch` を使い、Bronze / Silver / Gold の3層で TPC-H 注文データを変換する dbt ハンズオン用リポジトリです。参加者が GitHub からクローンして、dbt Cloud または dbt CLI から実行できる構成にしています。
 
 具体的な作業手順は [HANDSON_STEPS.md](HANDSON_STEPS.md) を参照してください。
 
@@ -79,10 +79,10 @@ dbt test --profiles-dir .
 └── README.md
 ```
 
-`models/bronze` は Databricks の `samples.tpch` をそのまま参照する View、`models/silver` は分析しやすいカラム名と計算値を持つ View、`models/gold` はダッシュボード向けの集計 View です。`macros/generate_schema_name.sql` は、dbt のカスタムスキーマ名を `bronze` / `silver` / `gold` としてそのまま利用するためのマクロです。
+`models/bronze` は Databricks の `samples.tpch` をそのまま参照する View、`models/silver` は分析しやすいカラム名と計算値を持つ Table、`models/gold` はダッシュボード向けの集計 Table です。`macros/generate_schema_name.sql` は、dbt のカスタムスキーマ名を `bronze` / `silver` / `gold` としてそのまま利用するためのマクロです。
 
 ## メダリオンアーキテクチャ
 
-メダリオンアーキテクチャは、データを Bronze、Silver、Gold の段階に分けて整備する設計です。Bronze ではソースデータをほぼそのまま保持し、Silver では型やカラム名を整えて分析しやすくし、Gold では BI やダッシュボードで使いやすい集計済みデータを作成します。このハンズオンでは実行環境に合わせて View として作成しますが、概念上のレイヤー分けは同じです。
+メダリオンアーキテクチャは、データを Bronze、Silver、Gold の段階に分けて整備する設計です。Bronze ではソースデータをほぼそのまま保持し、Silver では型やカラム名を整えて分析しやすくし、Gold では BI やダッシュボードで使いやすい集計済みデータを作成します。
 
 このリポジトリでは、Databricks Unity Catalog の `workspace` カタログ配下に `bronze`、`silver`、`gold` の各スキーマを作成してモデルを出力します。

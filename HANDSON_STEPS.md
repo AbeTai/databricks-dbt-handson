@@ -7,8 +7,8 @@
 このハンズオンでは、Databricks のサンプルデータ `samples.tpch` を使って、次の流れでデータモデルを作成します。
 
 1. Bronze: ソーステーブルを加工せずに参照する View を作成する
-2. Silver: カラム名の整理、型変換、計算カラム追加を行う View を作成する
-3. Gold: ダッシュボードで使いやすい集計 View を作成する
+2. Silver: カラム名の整理、型変換、計算カラム追加を行う Table を作成する
+3. Gold: ダッシュボードで使いやすい集計 Table を作成する
 4. dbt test: Silver モデルに定義したデータテストを実行する
 
 作成される主なモデルは次の通りです。
@@ -155,7 +155,7 @@ dbt run --select bronze
 - `models/silver/silver_lineitem.sql`
 - `models/silver/schema.yml`
 
-Silver モデルでは、分析しやすい形にカラム名を変換し、不要なカラムを除外します。`silver_lineitem` では `revenue` を計算します。このハンズオン環境では managed table 作成が制限されることがあるため、Silver も View として作成します。
+Silver モデルでは、分析しやすい形にカラム名を変換し、不要なカラムを除外します。`silver_lineitem` では `revenue` を計算します。
 
 Silver モデルだけを実行する場合は次を実行します。
 
@@ -163,7 +163,7 @@ Silver モデルだけを実行する場合は次を実行します。
 dbt run --select silver
 ```
 
-実行後、Databricks の `workspace.silver` スキーマに View が作成されます。
+実行後、Databricks の `workspace.silver` スキーマに Table が作成されます。
 
 ## 11. Gold モデルを確認する
 
@@ -173,7 +173,7 @@ Gold モデルを確認します。
 - `models/gold/gold_order_status_summary.sql`
 - `models/gold/schema.yml`
 
-Gold モデルは、BI やダッシュボードで使いやすい集計済み View です。
+Gold モデルは、BI やダッシュボードで使いやすい集計済み Table です。
 
 Gold モデルだけを実行する場合は次を実行します。
 
@@ -181,11 +181,46 @@ Gold モデルだけを実行する場合は次を実行します。
 dbt run --select gold
 ```
 
-実行後、Databricks の `workspace.gold` スキーマに View が作成されます。
+実行後、Databricks の `workspace.gold` スキーマに Table が作成されます。
 
 ## 12. 全モデルを実行する
 
 依存関係の順序を dbt に任せて、全モデルを実行します。
+
+過去の実行で Silver / Gold に View や壊れた Table が残っている場合は、Databricks SQL Editor で既存オブジェクトの種類を確認し、該当する `drop` 文を実行してから dbt を再実行してください。
+
+```sql
+select
+  table_catalog,
+  table_schema,
+  table_name,
+  table_type
+from system.information_schema.tables
+where table_catalog = 'workspace'
+  and table_schema in ('silver', 'gold')
+  and table_name in (
+    'silver_orders',
+    'silver_lineitem',
+    'gold_monthly_revenue',
+    'gold_order_status_summary'
+  );
+```
+
+`table_type` が `VIEW` の場合は `drop view`、`MANAGED` などのテーブルの場合は `drop table` を実行します。
+
+```sql
+-- VIEW の場合
+drop view if exists workspace.silver.silver_orders;
+drop view if exists workspace.silver.silver_lineitem;
+drop view if exists workspace.gold.gold_monthly_revenue;
+drop view if exists workspace.gold.gold_order_status_summary;
+
+-- TABLE の場合
+drop table if exists workspace.silver.silver_orders;
+drop table if exists workspace.silver.silver_lineitem;
+drop table if exists workspace.gold.gold_monthly_revenue;
+drop table if exists workspace.gold.gold_order_status_summary;
+```
 
 ```bash
 dbt run
@@ -198,8 +233,8 @@ dbt run
 | レイヤー | 作成先 |
 |---|---|
 | Bronze | `workspace.bronze` の View |
-| Silver | `workspace.silver` の View |
-| Gold | `workspace.gold` の View |
+| Silver | `workspace.silver` の Table |
+| Gold | `workspace.gold` の Table |
 
 ## 13. データテストを実行する
 
@@ -223,7 +258,7 @@ dbt test
 
 ## 14. Databricks 上で結果を確認する
 
-Databricks SQL Editor で次のクエリを実行し、作成された View を確認します。
+Databricks SQL Editor で次のクエリを実行し、作成された Table を確認します。
 
 ```sql
 select *
@@ -274,7 +309,7 @@ dbt test --profiles-dir .
 | SQL Warehouse が見つからない | SQL Warehouse が起動しているか、HTTP Path が正しいか確認する |
 | `samples.tpch` が参照できない | ワークスペースでサンプルデータにアクセスできるか確認する |
 | `workspace.bronze` などに作成できない | Unity Catalog のカタログ、スキーマ作成権限を確認する |
-| `hive_metastore` に作成しようとして失敗する | `CREATE TABLE ... USING DELTA` がこの環境で制限されている可能性があるため、Silver / Gold が View materialization になっているか確認する |
+| `hive_metastore` に作成しようとして失敗する | `workspace.silver` / `workspace.gold` に古い View や壊れた Table が残っていないか確認し、必要に応じて drop してから再実行する |
 | `dbt test` が失敗する | 失敗したモデル、カラム、テスト名を確認し、対象データを SQL で確認する |
 | モデルが `dev_bronze` に作成される | `macros/generate_schema_name.sql` が存在するか確認する |
 
@@ -286,4 +321,4 @@ dbt test --profiles-dir .
 - `dbt run` が全モデルで成功している
 - `dbt test` がすべて Pass している
 - Databricks に `workspace.bronze`、`workspace.silver`、`workspace.gold` のオブジェクトが作成されている
-- Gold View を SQL Editor で参照できる
+- Gold テーブルを SQL Editor で参照できる
