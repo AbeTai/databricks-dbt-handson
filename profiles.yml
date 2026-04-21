@@ -6,6 +6,6 @@ databricks_dbt_handson:
       host: <your-workspace-host>          # 例: adb-xxxx.azuredatabricks.net
       http_path: <your-sql-warehouse-path> # 例: /sql/1.0/warehouses/xxxx
       token: <your-personal-access-token>
-      catalog: main
+      catalog: workspace
       schema: dev
       threads: 4
