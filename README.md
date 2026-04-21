@@ -26,7 +26,7 @@ databricks_dbt_handson:
       host: <your-workspace-host>
       http_path: <your-sql-warehouse-path>
       token: <your-personal-access-token>
-      catalog: main
+      catalog: workspace
       schema: dev
       threads: 4
 ```
@@ -34,6 +34,8 @@ databricks_dbt_handson:
 `host` には `adb-xxxx.azuredatabricks.net` のようなワークスペースホスト、`http_path` には SQL Warehouse の HTTP Path、`token` には Personal Access Token を設定してください。
 
 dbt Cloud を使う場合は、Cloud 側の接続設定に同じ Databricks 接続情報を登録します。リポジトリ内の `profiles.yml` はローカル実行用テンプレートです。
+
+Databricks の Unity Catalog を使うため、dbt Cloud の接続設定でも Catalog は `workspace` にしてください。このプロジェクトでは `dbt_project.yml` に `+database: workspace` を設定し、モデルの出力先カタログを `workspace` に固定しています。Databricks では dbt の `database` が Unity Catalog の catalog に対応します。
 
 ## 実行コマンド
 
@@ -83,4 +85,4 @@ dbt test --profiles-dir .
 
 メダリオンアーキテクチャは、データを Bronze、Silver、Gold の段階に分けて整備する設計です。Bronze ではソースデータをほぼそのまま保持し、Silver では型やカラム名を整えて分析しやすくし、Gold では BI やダッシュボードで使いやすい集計済みデータを作成します。
 
-このリポジトリでは、Databricks Unity Catalog の `main` カタログ配下に `bronze`、`silver`、`gold` の各スキーマを作成してモデルを出力します。
+このリポジトリでは、Databricks Unity Catalog の `workspace` カタログ配下に `bronze`、`silver`、`gold` の各スキーマを作成してモデルを出力します。
