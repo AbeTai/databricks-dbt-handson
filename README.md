@@ -2,6 +2,8 @@
 
 Databricks の `samples.tpch` を使い、Bronze / Silver / Gold の3層で TPC-H 注文データを変換する dbt ハンズオン用リポジトリです。参加者が GitHub からクローンして、dbt Cloud または dbt CLI から実行できる構成にしています。
 
+具体的な作業手順は [HANDSON_STEPS.md](HANDSON_STEPS.md) を参照してください。
+
 ## 事前準備
 
 - Databricks ワークスペース
@@ -54,6 +56,7 @@ dbt test --profiles-dir .
 ```text
 .
 ├── dbt_project.yml
+├── HANDSON_STEPS.md
 ├── profiles.yml
 ├── packages.yml
 ├── macros/
