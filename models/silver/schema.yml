@@ -18,7 +18,8 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['O', 'F', 'P']
+              arguments:
+                values: ['O', 'F', 'P']
       - name: order_status_label
         description: "注文ステータスコードを可読化したラベルです。"
       - name: total_price
