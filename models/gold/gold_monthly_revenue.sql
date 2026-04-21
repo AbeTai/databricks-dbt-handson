@@ -1,11 +1,13 @@
+{{ config(database='workspace') }}
+
 with order_line_revenue as (
   select
     o.order_id,
     date_trunc('month', o.order_date) as order_month,
     o.order_status_label,
     sum(l.revenue) as order_revenue
-  from {{ ref('silver_orders') }} as o
-  inner join {{ ref('silver_lineitem') }} as l
+  from {{ workspace_ref('silver_orders') }} as o
+  inner join {{ workspace_ref('silver_lineitem') }} as l
     on o.order_id = l.order_id
   group by
     o.order_id,

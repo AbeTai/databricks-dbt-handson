@@ -1,3 +1,5 @@
+{{ config(database='workspace') }}
+
 select
   l_orderkey as order_id,
   l_partkey as part_id,
@@ -14,4 +16,4 @@ select
   l_commitdate as commit_date,
   l_receiptdate as receipt_date,
   l_shipmode as ship_mode
-from {{ ref('bronze_lineitem') }}
+from {{ workspace_ref('bronze_lineitem') }}

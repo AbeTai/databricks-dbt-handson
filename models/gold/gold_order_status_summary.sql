@@ -1,10 +1,12 @@
+{{ config(database='workspace') }}
+
 with status_summary as (
   select
     order_status_label,
     count(*) as order_count,
     sum(total_price) as total_price,
     avg(total_price) as avg_price
-  from {{ ref('silver_orders') }}
+  from {{ workspace_ref('silver_orders') }}
   group by order_status_label
 )
 

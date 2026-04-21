@@ -1,3 +1,5 @@
+{{ config(database='workspace') }}
+
 select
   o_orderkey as order_id,
   o_custkey as customer_id,
@@ -12,4 +14,4 @@ select
   cast(o_orderdate as date) as order_date,
   o_orderpriority as order_priority,
   o_shippriority as ship_priority
-from {{ ref('bronze_orders') }}
+from {{ workspace_ref('bronze_orders') }}
