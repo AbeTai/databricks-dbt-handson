@@ -1,4 +1,4 @@
-tpch_handson:
+databricks_dbt_handson:
   target: dev
   outputs:
     dev:

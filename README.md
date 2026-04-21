@@ -16,7 +16,7 @@ Databricks の `samples.tpch` を使い、Bronze / Silver / Gold の3層で TPC-
 2. `profiles.yml` を編集し、Databricks 接続情報を自分の環境に合わせて設定します。
 
 ```yaml
-tpch_handson:
+databricks_dbt_handson:
   target: dev
   outputs:
     dev:

@@ -1,8 +1,8 @@
-name: 'tpch_handson'
+name: 'databricks_dbt_handson'
 version: '1.0.0'
 config-version: 2
 
-profile: 'tpch_handson'
+profile: 'databricks_dbt_handson'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
@@ -16,7 +16,7 @@ clean-targets:
   - "dbt_packages"
 
 models:
-  tpch_handson:
+  databricks_dbt_handson:
     bronze:
       +materialized: view
       +schema: bronze
