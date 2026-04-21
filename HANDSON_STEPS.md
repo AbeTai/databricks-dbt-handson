@@ -10,7 +10,8 @@
 2. Silver: カラム名の整理、型変換、計算カラム追加を行う Table を作成する
 3. Gold: ダッシュボードで使いやすい集計 Table を作成する
 4. dbt test: Silver モデルに定義したデータテストを実行する
-5. Daily Job: dbt Cloud で毎日実行するジョブを設定する
+5. Environment: dbt Cloud の Orchestration 用 environment を作成する
+6. Daily Job: dbt Cloud で毎日実行するジョブを設定する
 
 作成される主なモデルは次の通りです。
 
@@ -276,7 +277,36 @@ order by order_count desc;
 
 Gold テーブルの結果を使うと、月別売上の折れ線グラフや注文ステータス別の棒グラフを作成できます。
 
-## 15. dbt Cloud で Daily Job を設定する
+## 15. dbt Cloud で Environment を作成する
+
+Daily Job を作成する前に、dbt Cloud の Orchestration 用 environment を作成します。Environment は、Job 実行時に使う接続先、credential、branch、dbt バージョンなどをまとめた実行設定です。
+
+1. dbt Cloud の対象プロジェクトを開きます。
+2. Orchestration を開きます。
+3. Environments を選択します。
+4. Create environment または New environment を選択します。
+5. Environment name に `Production` または `Handson production` を入力します。
+6. Environment type は Deployment 用の environment を選択します。
+7. Connection は Databricks 接続済みの connection を選択します。
+8. Credentials は Daily Job で使う Databricks credential を選択します。
+9. Default schema には `dev` を設定します。
+10. Branch は `main` を設定します。
+11. dbt version はプロジェクトで使っている安定版または dbt Cloud の推奨バージョンを選択します。
+12. Save します。
+
+Environment 作成後、設定内容を確認します。
+
+| 確認項目 | 期待値 |
+|---|---|
+| Connection | Databricks の SQL Warehouse に接続できる connection |
+| Credentials | Databricks に接続できる credential |
+| Branch | `main` |
+| Default schema | `dev` |
+| Catalog | `workspace`、またはこのリポジトリの `+database: workspace` 設定で補完される状態 |
+
+このハンズオンでは `dbt_project.yml` 側で `+database: workspace` と `use catalog workspace` を設定しているため、Environment の Catalog 欄が編集できない場合でも `workspace` カタログに出力されます。
+
+## 16. dbt Cloud で Daily Job を設定する
 
 手動実行で `dbt run` と `dbt test` が成功したら、dbt Cloud の Deploy Job として毎日実行する設定を作成します。
 
@@ -284,7 +314,7 @@ Gold テーブルの結果を使うと、月別売上の折れ線グラフや注
 2. Deploy または Orchestration の Jobs 画面を開きます。
 3. Create job または New job を選択します。
 4. Job name に `Daily databricks dbt handson` を入力します。
-5. Environment は Databricks 接続済みの本番用または検証用 environment を選択します。
+5. Environment は前の手順で作成した `Production` または `Handson production` を選択します。
 6. Branch は `main` を選択します。
 7. Commands に次を設定します。
 
@@ -315,7 +345,7 @@ Job 実行後は、Run history で次を確認します。
 
 Daily Job では、手動実行と同じく `workspace.bronze`、`workspace.silver`、`workspace.gold` にモデルが作成・更新されます。
 
-## 16. ローカル dbt CLI で実行する場合
+## 17. ローカル dbt CLI で実行する場合
 
 ローカルで実行する場合は、`profiles.yml` のプレースホルダーを自分の Databricks 接続情報に置き換えます。
 
@@ -341,7 +371,7 @@ dbt run --profiles-dir .
 dbt test --profiles-dir .
 ```
 
-## 17. よくあるエラーと確認ポイント
+## 18. よくあるエラーと確認ポイント
 
 | エラー内容 | 確認ポイント |
 |---|---|
@@ -351,11 +381,13 @@ dbt test --profiles-dir .
 | `workspace.bronze` などに作成できない | Unity Catalog のカタログ、スキーマ作成権限を確認する |
 | `hive_metastore` に作成しようとして失敗する | `workspace.silver` / `workspace.gold` に古い View や壊れた Table が残っていないか確認し、必要に応じて drop してから再実行する |
 | `dbt test` が失敗する | 失敗したモデル、カラム、テスト名を確認し、対象データを SQL で確認する |
+| Environment が作成できない | Orchestration / Environments の作成権限があるか確認する |
+| Job で Environment が選べない | Environment type が Deployment 用になっているか確認する |
 | Daily Job が古いコードで実行される | Job の Branch が `main` になっているか、Run history の Commit SHA が最新か確認する |
 | Daily Job だけ失敗する | Job の Environment、Databricks credential、SQL Warehouse、実行権限が IDE と同じか確認する |
 | モデルが `dev_bronze` に作成される | `macros/generate_schema_name.sql` が存在するか確認する |
 
-## 18. ハンズオン完了条件
+## 19. ハンズオン完了条件
 
 次の状態になれば完了です。
 
@@ -364,5 +396,6 @@ dbt test --profiles-dir .
 - `dbt test` がすべて Pass している
 - Databricks に `workspace.bronze`、`workspace.silver`、`workspace.gold` のオブジェクトが作成されている
 - Gold テーブルを SQL Editor で参照できる
+- dbt Cloud の Deployment 用 Environment が作成されている
 - dbt Cloud の Daily Job が作成され、Run now で成功している
 - Daily Job の次回 scheduled run が設定されている

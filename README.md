@@ -45,7 +45,7 @@ dbt run
 dbt test
 ```
 
-手動実行が成功したら、dbt Cloud の Deploy Job で Daily 実行を設定します。詳細は [HANDSON_STEPS.md](HANDSON_STEPS.md) の Daily Job 設定手順を参照してください。
+手動実行が成功したら、dbt Cloud の Orchestration で Environment を作成し、Deploy Job で Daily 実行を設定します。詳細は [HANDSON_STEPS.md](HANDSON_STEPS.md) の Environment / Daily Job 設定手順を参照してください。
 
 ローカルで `profiles.yml` をリポジトリ直下から利用する場合は、次のように `--profiles-dir` を指定します。
 
