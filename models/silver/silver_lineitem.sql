@@ -1,7 +1,5 @@
 {{ config(database='workspace') }}
 
--- depends_on: {{ ref('bronze_lineitem') }}
-
 select
   l_orderkey as order_id,
   l_partkey as part_id,
@@ -18,4 +16,4 @@ select
   l_commitdate as commit_date,
   l_receiptdate as receipt_date,
   l_shipmode as ship_mode
-from {{ source('tpch', 'lineitem') }}
+from {{ workspace_ref('bronze_lineitem') }}

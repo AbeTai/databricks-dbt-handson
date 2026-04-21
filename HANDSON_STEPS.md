@@ -155,7 +155,7 @@ dbt run --select bronze
 - `models/silver/silver_lineitem.sql`
 - `models/silver/schema.yml`
 
-Silver モデルでは、分析しやすい形にカラム名を変換し、不要なカラムを除外します。`silver_lineitem` では `revenue` を計算します。dbt の依存関係としては Bronze の後に実行されますが、Databricks SQL Warehouse の catalog 解決差異を避けるため、Silver の SQL は `samples.tpch` ソースを直接参照します。
+Silver モデルでは、分析しやすい形にカラム名を変換し、不要なカラムを除外します。`silver_lineitem` では `revenue` を計算します。Silver は Bronze モデルを `ref()` 経由で参照します。
 
 Silver モデルだけを実行する場合は次を実行します。
 
