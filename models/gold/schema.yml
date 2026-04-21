@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: gold_monthly_revenue
+    description: "月別、注文ステータス別の売上を集計した Gold モデルです。"
+    columns:
+      - name: order_month
+        description: "注文月です。"
+      - name: order_status_label
+        description: "注文ステータスの可読ラベルです。"
+      - name: order_count
+        description: "注文数です。"
+      - name: total_revenue
+        description: "割引後売上金額の合計です。"
+      - name: avg_order_value
+        description: "注文単位で集計した売上金額の平均です。"
+
+  - name: gold_order_status_summary
+    description: "注文ステータス別の件数と金額を集計した Gold モデルです。"
+    columns:
+      - name: order_status_label
+        description: "注文ステータスの可読ラベルです。"
+      - name: order_count
+        description: "注文数です。"
+      - name: total_price
+        description: "注文合計金額の総額です。"
+      - name: avg_price
+        description: "注文合計金額の平均です。"
+      - name: pct_of_total
+        description: "全注文数に占める注文ステータス別注文数の割合です。"

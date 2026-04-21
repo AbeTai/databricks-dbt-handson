@@ -1,0 +1,152 @@
+version: 2
+
+sources:
+  - name: tpch
+    description: "Databricks プリセットの TPC-H サンプルデータです。"
+    database: samples
+    schema: tpch
+    tables:
+      - name: orders
+        description: "注文ヘッダー情報を保持するソーステーブルです。"
+        columns:
+          - name: o_orderkey
+            description: "注文IDです。"
+          - name: o_custkey
+            description: "顧客IDです。"
+          - name: o_orderstatus
+            description: "注文ステータスです。"
+          - name: o_totalprice
+            description: "注文の合計金額です。"
+          - name: o_orderdate
+            description: "注文日です。"
+          - name: o_orderpriority
+            description: "注文優先度です。"
+          - name: o_clerk
+            description: "注文担当者です。"
+          - name: o_shippriority
+            description: "出荷優先度です。"
+          - name: o_comment
+            description: "注文に関するコメントです。"
+      - name: lineitem
+        description: "注文明細情報を保持するソーステーブルです。"
+        columns:
+          - name: l_orderkey
+            description: "注文IDです。"
+          - name: l_partkey
+            description: "部品IDです。"
+          - name: l_suppkey
+            description: "サプライヤIDです。"
+          - name: l_linenumber
+            description: "注文内の明細番号です。"
+          - name: l_quantity
+            description: "注文数量です。"
+          - name: l_extendedprice
+            description: "割引前の明細金額です。"
+          - name: l_discount
+            description: "割引率です。"
+          - name: l_tax
+            description: "税率です。"
+          - name: l_returnflag
+            description: "返品フラグです。"
+          - name: l_linestatus
+            description: "明細ステータスです。"
+          - name: l_shipdate
+            description: "出荷日です。"
+          - name: l_commitdate
+            description: "コミット日です。"
+          - name: l_receiptdate
+            description: "受領日です。"
+          - name: l_shipinstruct
+            description: "出荷指示です。"
+          - name: l_shipmode
+            description: "出荷モードです。"
+          - name: l_comment
+            description: "明細に関するコメントです。"
+      - name: customer
+        description: "顧客情報を保持するソーステーブルです。"
+        columns:
+          - name: c_custkey
+            description: "顧客IDです。"
+          - name: c_name
+            description: "顧客名です。"
+          - name: c_address
+            description: "住所です。"
+          - name: c_nationkey
+            description: "国IDです。"
+          - name: c_phone
+            description: "電話番号です。"
+          - name: c_acctbal
+            description: "口座残高です。"
+          - name: c_mktsegment
+            description: "市場セグメントです。"
+          - name: c_comment
+            description: "顧客に関するコメントです。"
+      - name: nation
+        description: "国情報を保持するソーステーブルです。"
+        columns:
+          - name: n_nationkey
+            description: "国IDです。"
+          - name: n_name
+            description: "国名です。"
+          - name: n_regionkey
+            description: "地域IDです。"
+          - name: n_comment
+            description: "国に関するコメントです。"
+
+models:
+  - name: bronze_orders
+    description: "orders ソースを変換せずに取り込む Bronze モデルです。"
+    columns:
+      - name: o_orderkey
+        description: "注文IDです。"
+      - name: o_custkey
+        description: "顧客IDです。"
+      - name: o_orderstatus
+        description: "注文ステータスです。"
+      - name: o_totalprice
+        description: "注文の合計金額です。"
+      - name: o_orderdate
+        description: "注文日です。"
+      - name: o_orderpriority
+        description: "注文優先度です。"
+      - name: o_clerk
+        description: "注文担当者です。"
+      - name: o_shippriority
+        description: "出荷優先度です。"
+      - name: o_comment
+        description: "注文に関するコメントです。"
+  - name: bronze_lineitem
+    description: "lineitem ソースを変換せずに取り込む Bronze モデルです。"
+    columns:
+      - name: l_orderkey
+        description: "注文IDです。"
+      - name: l_partkey
+        description: "部品IDです。"
+      - name: l_suppkey
+        description: "サプライヤIDです。"
+      - name: l_linenumber
+        description: "注文内の明細番号です。"
+      - name: l_quantity
+        description: "注文数量です。"
+      - name: l_extendedprice
+        description: "割引前の明細金額です。"
+      - name: l_discount
+        description: "割引率です。"
+      - name: l_tax
+        description: "税率です。"
+      - name: l_returnflag
+        description: "返品フラグです。"
+      - name: l_linestatus
+        description: "明細ステータスです。"
+      - name: l_shipdate
+        description: "出荷日です。"
+      - name: l_commitdate
+        description: "コミット日です。"
+      - name: l_receiptdate
+        description: "受領日です。"
+      - name: l_shipinstruct
+        description: "出荷指示です。"
+      - name: l_shipmode
+        description: "出荷モードです。"
+      - name: l_comment
+        description: "明細に関するコメントです。"

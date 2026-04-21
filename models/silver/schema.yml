@@ -1,0 +1,77 @@
+version: 2
+
+models:
+  - name: silver_orders
+    description: "注文データを分析しやすいカラム名と値に整形した Silver モデルです。"
+    columns:
+      - name: order_id
+        description: "注文IDです。"
+        tests:
+          - not_null
+          - unique
+      - name: customer_id
+        description: "注文した顧客のIDです。"
+        tests:
+          - not_null
+      - name: order_status
+        description: "ソース由来の注文ステータスコードです。"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['O', 'F', 'P']
+      - name: order_status_label
+        description: "注文ステータスコードを可読化したラベルです。"
+      - name: total_price
+        description: "注文の合計金額です。"
+        tests:
+          - not_null
+      - name: order_date
+        description: "注文日です。"
+        tests:
+          - not_null
+      - name: order_priority
+        description: "注文優先度です。"
+      - name: ship_priority
+        description: "出荷優先度です。"
+
+  - name: silver_lineitem
+    description: "注文明細データを分析しやすいカラム名に整形し、売上金額を追加した Silver モデルです。"
+    columns:
+      - name: order_id
+        description: "注文IDです。"
+        tests:
+          - not_null
+      - name: part_id
+        description: "部品IDです。"
+      - name: supplier_id
+        description: "サプライヤIDです。"
+      - name: line_number
+        description: "注文内の明細番号です。"
+        tests:
+          - not_null
+      - name: quantity
+        description: "注文数量です。"
+      - name: extended_price
+        description: "割引前の明細金額です。"
+      - name: discount
+        description: "割引率です。"
+      - name: tax
+        description: "税率です。"
+      - name: revenue
+        description: "割引後の明細売上金額です。"
+        tests:
+          - not_null
+      - name: return_flag
+        description: "返品フラグです。"
+      - name: line_status
+        description: "明細ステータスです。"
+      - name: ship_date
+        description: "出荷日です。"
+        tests:
+          - not_null
+      - name: commit_date
+        description: "コミット日です。"
+      - name: receipt_date
+        description: "受領日です。"
+      - name: ship_mode
+        description: "出荷モードです。"
